@@ -3,6 +3,7 @@ package com.eraysirdas.dictionaryproject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import com.eraysirdas.dictionaryproject.databinding.RowRecyclerviewBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -23,11 +26,13 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Adapte
 
     ArrayList<Data> dataArrayList;
     private FirebaseFirestore firestore;
+    private FirebaseAuth firebaseAuth;
 
 
     public AdapterRecycler(ArrayList<Data> dataArrayList) {
         this.dataArrayList = dataArrayList;
         firestore=FirebaseFirestore.getInstance();
+        firebaseAuth=FirebaseAuth.getInstance();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -57,6 +62,25 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Adapte
         String timeAgo = Utils.getTimeAgo(postTimestamp);
         holder.binding.dateTv.setText(timeAgo);
 
+        // Firebase'den mevcut kullanıcıyı al
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        String currentUserId = (firebaseUser != null) ? firebaseUser.getUid() : null;
+
+        // Gönderiyi atan kullanıcının UID'sini al
+        String postUserId = dataArrayList.get(position).getUid();
+        Log.e("AdapterRecycler","currentUser: "+currentUserId+" postUserId: "+postUserId);
+
+
+        // Kullanıcıya göre görünürlüğü ayarla
+        if (currentUserId != null && currentUserId.equals(postUserId)) {
+            // Eğer mevcut kullanıcı, gönderiyi atan kullanıcı ise düğmeler görünür
+            holder.binding.deleteBtn.setVisibility(View.VISIBLE);
+            holder.binding.refreshBtn.setVisibility(View.VISIBLE);
+        } else {
+            // Başkasının gönderisi ise düğmeleri gizle
+            holder.binding.deleteBtn.setVisibility(View.GONE);
+            holder.binding.refreshBtn.setVisibility(View.GONE);
+        }
 
         holder.binding.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +97,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Adapte
                 intent.putExtra("inWord",dataArrayList.get(position).getWord());
                 intent.putExtra("inMeaningWord",dataArrayList.get(position).getWordMeaning());
                 intent.putExtra("inUser",dataArrayList.get(position).getUser());
-                intent.putExtra("dataId",dataArrayList.get(position).getUid());
+                intent.putExtra("dataId",dataArrayList.get(position).getDocumentId());
                 holder.itemView.getContext().startActivity(intent);
             }
         });
@@ -81,7 +105,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Adapte
 
 
     private void deleteData(AdapterHolder holder, int pos) {
-        firestore.collection("Data").document(dataArrayList.get(pos).getUid())
+        firestore.collection("Data").document(dataArrayList.get(pos).getDocumentId())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @SuppressLint("NotifyDataSetChanged")

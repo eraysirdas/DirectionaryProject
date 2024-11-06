@@ -7,4 +7,11 @@
         android:title="Search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_sign_out"
+        android:title="Çıkış Yap"
+        app:showAsAction="never"/>
+
+
 </menu>

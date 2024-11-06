@@ -13,16 +13,28 @@
         android:theme="@style/Theme.DictionaryProject"
         tools:targetApi="31">
         <activity
-            android:name=".UploadActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeNo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainSignActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeNo"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
+            android:name=".UploadActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="false">
+
         </activity>
     </application>
 

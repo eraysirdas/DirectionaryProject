@@ -27,7 +27,8 @@
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
-                app:boxCornerRadiusTopStart="10dp">
+                app:boxCornerRadiusTopStart="10dp"
+                android:inputType="textMultiLine">
 
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -49,14 +50,17 @@
                 app:boxCornerRadiusTopEnd="10dp"
                 app:boxCornerRadiusTopStart="10dp"
                 android:layout_marginTop="20dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="200"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/meaningEt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="15"
+                    android:maxLength="200"
                     android:hint="Anlamı"
+                    android:minHeight="100dp"
                     android:inputType="textMultiLine"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -79,8 +83,20 @@
                     android:layout_height="wrap_content"
                     android:maxLength="15"
                     android:hint="Kullanıcı Adı"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="20dp"
+                    android:maxLines="1"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <CheckBox
+                android:layout_marginTop="5dp"
+                android:id="@+id/saveUsernameCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kullanıcı adını kaydet"
+                android:layout_gravity="start"/>
+
 
 
             <com.google.android.material.button.MaterialButton

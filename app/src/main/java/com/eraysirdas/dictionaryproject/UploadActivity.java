@@ -2,34 +2,36 @@ package com.eraysirdas.dictionaryproject;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.eraysirdas.dictionaryproject.databinding.ActivityUploadBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 public class UploadActivity extends AppCompatActivity {
     private ActivityUploadBinding binding;
     private FirebaseFirestore firestore;
     private String word,meaning,user,uid;
     ProgressDialog progressDialog;
+    private FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
     String info,inWord,inMeaningWord,inUser,dataId;
+
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,8 @@ public class UploadActivity extends AppCompatActivity {
         setContentView(view);
 
         firestore = FirebaseFirestore.getInstance();
+        firebaseAuth=FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         progressDialog=new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -52,9 +56,7 @@ public class UploadActivity extends AppCompatActivity {
         inWord = intent.getStringExtra("inWord");
         inMeaningWord = intent.getStringExtra("inMeaningWord");
         inUser = intent.getStringExtra("inUser");
-        dataId = intent.getStringExtra("dataId"); // Güncellenecek dokümanın ID'sini alın
-
-
+        dataId = intent.getStringExtra("dataId");
 
 
         if(info.equals("new")){
@@ -66,21 +68,62 @@ public class UploadActivity extends AppCompatActivity {
             binding.meaningEt.setText(inMeaningWord);
             binding.userEt.setText(inUser);
         }
+
+        sharedPreferences = getSharedPreferences("userPrefs", MODE_PRIVATE);
+
+        String savedUsername = sharedPreferences.getString("username", "");
+        boolean isChecked = sharedPreferences.getBoolean("isChecked", false);
+
+        if (!savedUsername.isEmpty()) {
+            binding.userEt.setText(savedUsername);
+            binding.saveUsernameCheckBox.setChecked(isChecked);
+
+            if (isChecked) {
+                binding.userEt.setEnabled(false);
+            } else {
+                binding.userEt.setEnabled(true);
+            }
+        }
+
+        binding.saveUsernameCheckBox.setOnCheckedChangeListener((buttonView, isChecked1) -> {
+            if (isChecked1) {
+                binding.userEt.setEnabled(false);
+            } else {
+                binding.userEt.setEnabled(true);
+            }
+        });
     }
 
     public void uploadBtnClicked(View view){
-        progressDialog.setMessage("Azıcık Bekle...");
+        progressDialog.setMessage("Lütfen bekleyin...");
         progressDialog.show();
         word=binding.wordEt.getText().toString().trim();
         meaning=binding.meaningEt.getText().toString().trim();
         user=binding.userEt.getText().toString().trim();
 
+        boolean isChecked = binding.saveUsernameCheckBox.isChecked();
+
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        if (isChecked) {
+            editor.putString("username", user);
+            editor.putBoolean("isChecked", true);
+            binding.userEt.setEnabled(false);
+        } else {
+            editor.putBoolean("isChecked", false);
+            binding.userEt.setEnabled(true);
+        }
+
+        editor.apply();
+
+        String getUid = firebaseUser.getUid();
 
         HashMap<String,Object> hashMap = new HashMap<>();
         hashMap.put("word",word);
         hashMap.put("wordMeaning",meaning);
         hashMap.put("user",user);
         hashMap.put("date", FieldValue.serverTimestamp());
+        hashMap.put("uid",getUid);
 
         if(info.equals("new")){
 
@@ -88,7 +131,7 @@ public class UploadActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
 
-                    Toast.makeText(UploadActivity.this, "Tebrikler uaq aslanı veya kaplanı", Toast.LENGTH_LONG).show();
+                    Toast.makeText(UploadActivity.this, "Yüklendi.", Toast.LENGTH_LONG).show();
                     progressDialog.dismiss();
                     Intent intent = new Intent(UploadActivity.this,MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -100,7 +143,7 @@ public class UploadActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     progressDialog.dismiss();
-                    Toast.makeText(UploadActivity.this, "Bozdun! Şaka bu sefer sorun sende değil bende :/", Toast.LENGTH_LONG).show();
+                    Toast.makeText(UploadActivity.this, "Database Hatası.", Toast.LENGTH_LONG).show();
                 }
             });
 
@@ -112,7 +155,7 @@ public class UploadActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(UploadActivity.this, "Veri başarıyla güncellendi!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(UploadActivity.this, "Güncelleme Başarılı", Toast.LENGTH_LONG).show();
                             progressDialog.dismiss();
                             Intent intent = new Intent(UploadActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

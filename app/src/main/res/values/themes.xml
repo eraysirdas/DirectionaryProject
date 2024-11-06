@@ -3,8 +3,7 @@
     <style name="Base.Theme.DictionaryProject" parent="Theme.Material3.DayNight">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="android:statusBarColor">#A0A0A0  </item>
-
+        <item name="android:statusBarColor">@color/statusBarColor</item>
 
     </style>
 
