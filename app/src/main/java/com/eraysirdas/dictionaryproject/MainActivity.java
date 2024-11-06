@@ -10,23 +10,16 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.eraysirdas.dictionaryproject.databinding.ActivityMainBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -36,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore firestore;
     ArrayList<Data> dataArrayList;
     AdapterRecycler adapterRecycler;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         dataArrayList = new ArrayList<>();
         firestore = FirebaseFirestore.getInstance();
+        firebaseAuth=FirebaseAuth.getInstance();
         getData();
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -76,8 +71,9 @@ public class MainActivity extends AppCompatActivity {
                         String wordMeaning = (String) map.get("wordMeaning");
                         String user = (String) map.get("user");
                         Timestamp date = (Timestamp) map.get("date");
+                        String uid = (String) map.get("uid");
 
-                        Data data = new Data(documentId, word, wordMeaning, user, date);
+                        Data data = new Data(documentId,uid, word, wordMeaning, user, date);
                         dataArrayList.add(data);
                     }
                     adapterRecycler.notifyDataSetChanged();
@@ -117,6 +113,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+        if(id==R.id.action_sign_out){
+            firebaseAuth.signOut();
+            Intent intent = new Intent(MainActivity.this,MainSignActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void filter(String text) {

@@ -14,62 +14,75 @@
         android:padding="10dp"
         android:layout_marginStart="10dp">
 
-        <TextView
-            android:id="@+id/firstTv"
+        <ScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Kelime"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            style="@style/TextAppearance.MaterialComponents.Body1"/>
+            >
 
-        <TextView
-            android:id="@+id/secondTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Anlamı"
-            android:layout_below="@id/firstTv"
-            android:layout_marginTop="5dp"
-            style="@style/TextAppearance.MaterialComponents.Body2"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/userTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Eray Sırdaş"
-            android:layout_below="@id/secondTv"
-            android:layout_marginTop="5dp"/>
+                <TextView
+                    android:id="@+id/firstTv"
+                    style="@style/TextAppearance.MaterialComponents.Body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kelime"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:layout_toStartOf="@id/refreshBtn"/>
 
-        <TextView
-            android:id="@+id/dateTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12 saat önce"
-            android:layout_alignBottom="@id/userTv"
-            android:layout_alignParentEnd="true"/>
+                <TextView
+                    android:id="@+id/secondTv"
+                    style="@style/TextAppearance.MaterialComponents.Body2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/firstTv"
+                    android:layout_marginTop="5dp"
+                    android:text="Anlamı"
+                    android:layout_toStartOf="@id/refreshBtn" />
 
-        <ImageButton
-            android:id="@+id/refreshBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_toStartOf="@id/deleteBtn"
-            android:backgroundTint="@android:color/transparent"
-            android:onClick="refreshBtnClicked"
-            android:src="@drawable/baseline_refresh_24"
-            app:tint="#4CAF50" />
+                <TextView
+                    android:id="@+id/userTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/secondTv"
+                    android:layout_marginTop="5dp"
+                    android:text="Eray Sırdaş"
+                    android:layout_toStartOf="@id/refreshBtn"/>
 
-        <ImageButton
-            android:id="@+id/deleteBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerHorizontal="true"
-            android:backgroundTint="@android:color/transparent"
-            android:onClick="deleteBtnClicked"
-            android:src="@drawable/baseline_delete_24"
-            app:tint="#F44336 " />
+                <TextView
+                    android:id="@+id/dateTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/userTv"
+                    android:layout_alignParentEnd="true"
+                    android:text="12 saat önce" />
 
+                <ImageButton
+                    android:id="@+id/refreshBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toStartOf="@id/deleteBtn"
+                    android:backgroundTint="@android:color/transparent"
+                    android:onClick="refreshBtnClicked"
+                    android:src="@drawable/baseline_refresh_24"
+                    app:tint="#4CAF50" />
+
+                <ImageButton
+                    android:id="@+id/deleteBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerHorizontal="true"
+                    android:backgroundTint="@android:color/transparent"
+                    android:onClick="deleteBtnClicked"
+                    android:src="@drawable/baseline_delete_24"
+                    app:tint="#F44336 " />
+            </RelativeLayout>
+        </ScrollView>
     </RelativeLayout>
 
 </com.google.android.material.card.MaterialCardView>
