@@ -3,16 +3,26 @@ package com.eraysirdas.dictionaryproject;
 import com.google.firebase.Timestamp;
 
 public class Data {
-    public String word;
-    public String wordMeaning;
-    public String user;
-    public Timestamp date;
+    private String uid;
+    private String word;
+    private String wordMeaning;
+    private String user;
+    private Timestamp date;
 
-    public Data(String word, String wordMeaning, String user,Timestamp date) {
+    public Data(String uid,String word, String wordMeaning, String user,Timestamp date) {
+        this.uid=uid;
         this.word = word;
         this.wordMeaning = wordMeaning;
         this.user = user;
         this.date=date;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getWord() {

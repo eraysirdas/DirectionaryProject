@@ -16,7 +16,7 @@
 
         <TextView
             android:id="@+id/firstTv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Kelime"
             android:textSize="20sp"
@@ -25,7 +25,7 @@
 
         <TextView
             android:id="@+id/secondTv"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Anlamı"
             android:layout_below="@id/firstTv"
@@ -47,6 +47,28 @@
             android:text="12 saat önce"
             android:layout_alignBottom="@id/userTv"
             android:layout_alignParentEnd="true"/>
+
+        <ImageButton
+            android:id="@+id/refreshBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_toStartOf="@id/deleteBtn"
+            android:backgroundTint="@android:color/transparent"
+            android:onClick="refreshBtnClicked"
+            android:src="@drawable/baseline_refresh_24"
+            app:tint="#4CAF50" />
+
+        <ImageButton
+            android:id="@+id/deleteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@android:color/transparent"
+            android:onClick="deleteBtnClicked"
+            android:src="@drawable/baseline_delete_24"
+            app:tint="#F44336 " />
 
     </RelativeLayout>
 

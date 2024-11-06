@@ -19,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.eraysirdas.dictionaryproject.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -58,39 +59,37 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void getData() {
 
-        firestore.collection("Data").orderBy("date", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+        firestore.collection("Data")
+                .orderBy("date", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    dataArrayList.clear();  // Listeyi temizle
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
 
-                if(error!=null){
-                    Toast.makeText(MainActivity.this, error.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                }
+                        String documentId = documentSnapshot.getId();
 
-                if(value!=null){
-                    for(DocumentSnapshot documentSnapshot: value.getDocuments()){
-
-                        Map<String,Object> map = documentSnapshot.getData();
-
+                        Map<String, Object> map = documentSnapshot.getData();
                         String word = (String) map.get("word");
-                        String wordMeaning =(String) map.get("wordMeaning");
-                        String user =(String) map.get("user");
-                        Timestamp date =(Timestamp) map.get("date");
+                        String wordMeaning = (String) map.get("wordMeaning");
+                        String user = (String) map.get("user");
+                        Timestamp date = (Timestamp) map.get("date");
 
-                        Data data = new Data(word,wordMeaning,user,date);
+                        Data data = new Data(documentId, word, wordMeaning, user, date);
                         dataArrayList.add(data);
                     }
                     adapterRecycler.notifyDataSetChanged();
-                }
-            }
-        });
-
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(MainActivity.this, "Veriler yüklenemedi.", Toast.LENGTH_SHORT).show();
+                });
     }
 
     public void fabBtnClicked(View view){
         Intent intent = new Intent(MainActivity.this,UploadActivity.class);
+        intent.putExtra("info","new");
         startActivity(intent);
     }
 
