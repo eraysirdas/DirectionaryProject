@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
+    android:layout_margin="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginStart="10dp">
+
+        <TextView
+            android:id="@+id/firstTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kelime"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            style="@style/TextAppearance.MaterialComponents.Body1"/>
+
+        <TextView
+            android:id="@+id/secondTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Anlamı"
+            android:layout_below="@id/firstTv"
+            android:layout_marginTop="5dp"
+            style="@style/TextAppearance.MaterialComponents.Body2"/>
+
+        <TextView
+            android:id="@+id/userTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Eray Sırdaş"
+            android:layout_below="@id/secondTv"
+            android:layout_marginTop="5dp"/>
+
+        <TextView
+            android:id="@+id/dateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12 saat önce"
+            android:layout_alignBottom="@id/userTv"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+</com.google.android.material.card.MaterialCardView>
